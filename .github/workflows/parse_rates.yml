@@ -1,0 +1,78 @@
+# .github/workflows/parse_rates.yml
+# Запускает парсер ставок каждый час
+# Результат сохраняет в data/rates.json и коммитит в репозиторий
+
+name: 📊 Обновление ставок банков
+
+on:
+  # Каждый час в :00
+  schedule:
+    - cron: '0 * * * *'
+
+  # Можно запустить вручную из вкладки Actions
+  workflow_dispatch:
+
+  # Запускать при пуше в main (для тестирования)
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/parse_rates.py'
+
+jobs:
+  parse:
+    name: Парсинг ставок
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: write   # Нужно чтобы коммитить rates.json
+
+    steps:
+      # 1. Скачиваем репозиторий
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      # 2. Устанавливаем Python
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 3. Устанавливаем зависимости
+      - name: 📦 Install dependencies
+        run: |
+          pip install httpx beautifulsoup4 lxml
+
+      # 4. Создаём папку data если нет
+      - name: 📁 Prepare data folder
+        run: mkdir -p data
+
+      # 5. Запускаем парсер
+      - name: 🔍 Run parser
+        run: python scripts/parse_rates.py
+        env:
+          # Токен Telegram для уведомлений об изменениях (опционально)
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      # 6. Коммитим обновлённый rates.json
+      - name: 💾 Commit rates.json
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "ФинРадар Bot"
+          git add data/rates.json
+          # Коммитим только если файл изменился
+          git diff --staged --quiet || git commit -m "📊 Обновление ставок: $(date +'%d.%m.%Y %H:%M')"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 7. Уведомление в Telegram если ставки изменились
+      - name: 🔔 Telegram уведомление
+        if: always()
+        run: python scripts/notify_telegram.py
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
