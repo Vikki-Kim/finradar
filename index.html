@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ФинРадар — все ставки банков России в одном месте. Актуальные ставки по вкладам, ипотеке, накопительным счетам. Обновление каждый час.">
+<meta name="keywords" content="ставки банков, вклады, ипотека, накопительные счета, ЦБ, ключевая ставка, Сбербанк, ВТБ, Тинькофф">
+<title>ФинРадар — Все ставки банков России</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #06090f;
+  --bg2: #0c1221;
+  --bg3: #111827;
+  --card: #0f1923;
+  --card2: #141e2e;
+  --border: rgba(99,179,237,0.12);
+  --border2: rgba(99,179,237,0.22);
+  --accent: #3b82f6;
+  --accent2: #60a5fa;
+  --accent3: #93c5fd;
+  --green: #22c55e;
+  --red: #ef4444;
+  --gold: #f59e0b;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --glow: rgba(59,130,246,0.15);
+  --glow2: rgba(59,130,246,0.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Golos Text', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+/* NOISE TEXTURE */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* HEADER */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(6,9,15,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 20px rgba(59,130,246,0.4);
+}
+
+.logo-text {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+
+.logo-text span { color: var(--accent2); }
+
+nav { display: flex; gap: 4px; }
+
+nav a {
+  color: var(--text2);
+  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+nav a:hover, nav a.active {
+  color: var(--text);
+  background: rgba(59,130,246,0.12);
+}
+
+.header-actions { display: flex; gap: 10px; align-items: center; }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Golos Text', sans-serif;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover { color: var(--text); border-color: var(--accent); }
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border: none;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Golos Text', sans-serif;
+  transition: all 0.2s;
+  box-shadow: 0 0 20px rgba(59,130,246,0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 25px rgba(59,130,246,0.5);
+}
+
+/* TICKER */
+.ticker-bar {
+  background: linear-gradient(90deg, rgba(59,130,246,0.08), rgba(59,130,246,0.03));
+  border-bottom: 1px solid var(--border);
+  padding: 8px 40px;
+  font-size: 13px;
+  color: var(--text2);
+  display: flex;
+  gap: 40px;
+  overflow: hidden;
+}
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.ticker-label { color: var(--text3); }
+.ticker-value { color: var(--text); font-weight: 600; }
+.ticker-change.up { color: var(--green); }
+.ticker-change.down { color: var(--red); }
+.ticker-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* HERO */
+.hero {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 40px 60px;
+  position: relative;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  gap: 60px;
+  align-items: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.25);
+  color: var(--green);
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: 0.5px;
+}
+
+.hero h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin-bottom: 20px;
+}
+
+.hero h1 .gradient {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  color: var(--text2);
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+  max-width: 480px;
+}
+
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn-lg {
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Golos Text', sans-serif;
+  transition: all 0.25s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-lg.primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  box-shadow: 0 0 30px rgba(59,130,246,0.4);
+}
+
+.btn-lg.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(59,130,246,0.6);
+}
+
+.btn-lg.outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border2);
+}
+
+.btn-lg.outline:hover { background: rgba(59,130,246,0.08); border-color: var(--accent); }
+
+/* STATS CARD */
+.hero-stats {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-stats::before {
+  content:'';
+  position:absolute;
+  top:-40px;right:-40px;
+  width:200px;height:200px;
+  background: radial-gradient(circle, rgba(59,130,246,0.15), transparent 70%);
+  pointer-events:none;
+}
+
+.stats-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 20px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.stat-row:last-child { border-bottom: none; }
+
+.stat-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text2);
+  font-size: 14px;
+}
+
+.stat-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+
+.stat-right { text-align: right; }
+
+.stat-value {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-sub { font-size: 12px; color: var(--text3); }
+
+.tag-up { color: var(--green); font-size: 12px; font-weight: 600; }
+.tag-down { color: var(--red); font-size: 12px; font-weight: 600; }
+
+/* TABS */
+.section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 40px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.section-title span { color: var(--accent2); }
+
+.section-sub { color: var(--text3); font-size: 13px; margin-top: 4px; }
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--card);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 28px;
+  width: fit-content;
+}
+
+.tab {
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text2);
+  border: none;
+  background: transparent;
+  font-family: 'Golos Text', sans-serif;
+  transition: all 0.2s;
+}
+
+.tab.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 0 15px rgba(59,130,246,0.4);
+}
+
+.tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.05); }
+
+/* FILTER BAR */
+.filter-bar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filter-group { display: flex; flex-direction: column; gap: 6px; }
+
+.filter-label { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text3); }
+
+.filter-select, .filter-input {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Golos Text', sans-serif;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  min-width: 140px;
+}
+
+.filter-select:focus, .filter-input:focus { border-color: var(--accent); }
+
+.filter-select option { background: var(--bg3); }
+
+.filter-btn {
+  background: var(--accent);
+  border: none;
+  color: white;
+  padding: 9px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Golos Text', sans-serif;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover { background: var(--accent2); }
+
+/* TABLE */
+.table-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead th {
+  background: var(--card2);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.data-table thead th:hover { color: var(--text2); }
+
+.data-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.data-table tbody tr:last-child { border-bottom: none; }
+
+.data-table tbody tr:hover { background: rgba(59,130,246,0.05); }
+
+.data-table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.bank-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bank-logo {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: 'Unbounded', sans-serif;
+  flex-shrink: 0;
+}
+
+.bank-name { font-weight: 600; font-size: 14px; color: var(--text); }
+.bank-product { font-size: 12px; color: var(--text3); }
+
+.rate-value {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent2);
+}
+
+.change-up { color: var(--green); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
+.change-down { color: var(--red); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
+.change-same { color: var(--text3); font-size: 12px; }
+
+.badge {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-green { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+.badge-blue { background: rgba(59,130,246,0.1); color: var(--accent2); border: 1px solid rgba(59,130,246,0.2); }
+.badge-gold { background: rgba(245,158,11,0.1); color: var(--gold); border: 1px solid rgba(245,158,11,0.2); }
+.badge-red { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+
+.updated-time { font-size: 11px; color: var(--text3); }
+
+.btn-sm {
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Golos Text', sans-serif;
+  transition: all 0.2s;
+  text-decoration: none;
+  border: none;
+  white-space: nowrap;
+}
+
+.btn-sm.primary { background: var(--accent); color: white; }
+.btn-sm.primary:hover { background: var(--accent2); }
+.btn-sm.ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+.btn-sm.ghost:hover { color: var(--text); border-color: var(--accent); }
+
+/* CARDS GRID */
+.cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.feature-card::before {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent3), transparent);
+}
+
+.card-icon { font-size: 28px; margin-bottom: 12px; }
+.card-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
+.card-bank { font-size: 14px; color: var(--text2); margin-bottom: 4px; }
+.card-rate { font-family: 'Unbounded', sans-serif; font-size: 32px; font-weight: 800; color: var(--accent2); line-height: 1; }
+.card-rate-unit { font-size: 16px; color: var(--text3); margin-left: 2px; }
+.card-desc { font-size: 13px; color: var(--text3); margin-top: 8px; }
+.card-winner { position:absolute; top:12px; right:12px; }
+
+/* CALCULATOR */
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  margin-top: 32px;
+}
+
+.calc-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  grid-column: 1/-1;
+}
+
+.calc-field { margin-bottom: 18px; }
+.calc-label { font-size: 12px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; display: block; }
+
+.calc-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: 'Golos Text', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.calc-input:focus { border-color: var(--accent); }
+
+.calc-result {
+  background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(59,130,246,0.03));
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.calc-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.calc-result-item:last-child { border-bottom: none; }
+
+.calc-result-label { font-size: 14px; color: var(--text2); }
+.calc-result-value { font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); }
+.calc-result-value.highlight { color: var(--accent2); font-size: 20px; }
+
+/* AI CHAT */
+.ai-chat-float {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 1000;
+}
+
+.ai-btn {
+  width: 60px; height: 60px;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  box-shadow: 0 4px 30px rgba(99,102,241,0.5);
+  transition: all 0.25s;
+  position: relative;
+}
+
+.ai-btn:hover { transform: scale(1.1); box-shadow: 0 8px 40px rgba(99,102,241,0.7); }
+
+.ai-btn::before {
+  content:'';
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  border:2px solid rgba(99,102,241,0.3);
+  animation: ripple 2s infinite;
+}
+
+@keyframes ripple {
+  0%{transform:scale(1);opacity:1}
+  100%{transform:scale(1.5);opacity:0}
+}
+
+.ai-badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: var(--green);
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+}
+
+.ai-panel {
+  position: absolute;
+  bottom: 76px;
+  right: 0;
+  width: 380px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  display: none;
+}
+
+.ai-panel.open { display: flex; flex-direction: column; }
+
+.ai-header {
+  background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(99,102,241,0.05));
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-avatar {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+.ai-name { font-weight: 700; font-size: 14px; }
+.ai-status { font-size: 11px; color: var(--green); }
+
+.ai-close {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.ai-messages {
+  height: 320px;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.msg {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.msg.bot {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.msg.user {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.quick-btns {
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quick-btn {
+  background: rgba(59,130,246,0.08);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  text-align: left;
+  font-family: 'Golos Text', sans-serif;
+  transition: all 0.2s;
+}
+
+.quick-btn:hover { background: rgba(59,130,246,0.15); color: var(--text); border-color: var(--accent); }
+
+.ai-input-wrap {
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.ai-input {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Golos Text', sans-serif;
+  outline: none;
+}
+
+.ai-input:focus { border-color: #6366f1; }
+
+.ai-send {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border: none;
+  color: white;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.ai-send:hover { transform: scale(1.05); }
+
+.ai-disclaimer {
+  padding: 8px 16px 12px;
+  font-size: 11px;
+  color: var(--text3);
+  text-align: center;
+}
+
+/* MORTGAGE PROGRAMS */
+.programs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+
+.program-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+
+.program-card:hover { border-color: var(--accent); }
+
+.program-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.program-rate { font-family: 'Unbounded', sans-serif; font-size: 28px; font-weight: 800; color: var(--accent2); margin: 10px 0; }
+.program-details { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.program-cond { font-size: 12px; color: var(--text3); margin-top: 8px; }
+
+/* INFO BLOCKS */
+.info-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin: 40px 0; }
+
+.info-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.info-num {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--accent2);
+  line-height: 1;
+}
+
+.info-label { font-size: 13px; color: var(--text3); margin-top: 6px; }
+
+/* SECTION DIVIDER */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0 40px;
+}
+
+/* INVEST TABS */
+.invest-content { display: none; }
+.invest-content.active { display: block; }
+
+/* LOADING */
+.loading { display: flex; align-items: center; gap: 8px; color: var(--text3); font-size: 14px; padding: 20px 0; }
+.spinner { width: 16px; height: 16px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* FOOTER */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  margin-top: 80px;
+  padding: 50px 40px 30px;
+}
+
+.footer-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-brand p { color: var(--text3); font-size: 14px; margin-top: 12px; max-width: 280px; line-height: 1.6; }
+
+.footer-col-title { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text2); margin-bottom: 14px; }
+
+.footer-col a { display: block; color: var(--text3); text-decoration: none; font-size: 14px; margin-bottom: 10px; transition: color 0.2s; }
+.footer-col a:hover { color: var(--text); }
+
+.footer-bottom {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text3);
+}
+
+.footer-disclaimer {
+  max-width: 1280px;
+  margin: 20px auto 0;
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.7;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* PAGE SECTIONS */
+.page-section {
+  display: none;
+}
+
+.page-section.active {
+  display: block;
+}
+
+/* GLOW BG */
+.glow-bg {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* TOGGLE */
+.toggle-wrap { display: flex; align-items: center; gap: 10px; }
+.toggle { width: 40px; height: 22px; background: var(--bg3); border: 1px solid var(--border); border-radius: 11px; cursor: pointer; position: relative; transition: background 0.2s; }
+.toggle.on { background: var(--accent); }
+.toggle::after { content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; background: white; border-radius: 50%; transition: transform 0.2s; }
+.toggle.on::after { transform: translateX(18px); }
+.toggle-label { font-size: 13px; color: var(--text2); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-stats { display: none; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: repeat(2,1fr); }
+  .programs-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  header { padding: 0 20px; }
+  .hero { padding: 40px 20px; }
+  .hero h1 { font-size: 32px; }
+  .section { padding: 30px 20px; }
+  nav { display: none; }
+}
+
+/* AI THINKING ANIMATION */
+.thinking { display: flex; gap: 4px; padding: 4px 0; }
+.thinking span { width: 7px; height: 7px; background: var(--text3); border-radius: 50%; animation: bounce 1.2s infinite; }
+.thinking span:nth-child(2) { animation-delay: 0.2s; }
+.thinking span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-8px)} }
+
+/* NOTIFICATION DOT */
+.notif-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; display: inline-block; }
+
+/* ANIMATE IN */
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.fade-up { animation: fadeUp 0.5s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#" onclick="showSection('home')">
+      <div class="logo-icon">📡</div>
+      <div class="logo-text">Фин<span>Радар</span></div>
+    </a>
+    <nav>
+      <a href="#" onclick="showSection('home')" class="active" id="nav-home">Главная</a>
+      <a href="#" onclick="showSection('deposits')" id="nav-deposits">Вклады</a>
+      <a href="#" onclick="showSection('mortgage')" id="nav-mortgage">Ипотека</a>
+      <a href="#" onclick="showSection('invest')" id="nav-invest">Инвестиции</a>
+      <a href="#" onclick="showSection('ai')" id="nav-ai">🤖 Советник</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn-ghost">Войти</button>
+      <button class="btn-primary">Регистрация</button>
+    </div>
+  </div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker-bar" id="tickerBar">
+  <div class="ticker-item">
+    <div class="ticker-dot"></div>
+    <span class="ticker-label">КС ЦБ:</span>
+    <span class="ticker-value" id="tk-rate">21%</span>
+  </div>
+  <div class="ticker-item">
+    <span class="ticker-label">Лучший вклад:</span>
+    <span class="ticker-value" id="tk-deposit">до 23%</span>
+    <span class="ticker-change up">↑</span>
+  </div>
+  <div class="ticker-item">
+    <span class="ticker-label">Ипотека от:</span>
+    <span class="ticker-value" id="tk-mortgage">6%</span>
+    <span class="ticker-label">(семейная)</span>
+  </div>
+  <div class="ticker-item">
+    <span class="ticker-label">Накоп. счёт до:</span>
+    <span class="ticker-value" id="tk-save">22%</span>
+  </div>
+  <div class="ticker-item">
+    <span class="ticker-label">Банков в базе:</span>
+    <span class="ticker-value">67</span>
+  </div>
+  <div class="ticker-item">
+    <span class="ticker-label">Обновлено:</span>
+    <span class="ticker-value" id="tk-time">—</span>
+  </div>
+</div>
+
+<!-- HOME SECTION -->
+<section class="page-section active" id="section-home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.08), transparent 70%);pointer-events:none;"></div>
+    <div class="hero-grid">
+      <div class="fade-up">
+        <div class="hero-badge">
+          <div class="ticker-dot"></div>
+          Обновляется в реальном времени
+        </div>
+        <h1>Все ставки банков<br>России <span class="gradient">в одном месте</span></h1>
+        <p class="hero-sub">Мониторим вклады, ипотеку, накопительные счета и инвестиционные инструменты всех крупных банков. Получайте уведомления об изменении ставок первым.</p>
+        <div class="hero-actions">
+          <a href="#" class="btn-lg primary" onclick="showSection('deposits')">
+            📊 Сравнить вклады
+          </a>
+          <a href="#" class="btn-lg outline" onclick="showSection('mortgage')">
+            🏠 Калькулятор ипотеки
+          </a>
+        </div>
+        <div style="margin-top:32px;display:flex;gap:24px;flex-wrap:wrap;">
+          <div>
+            <div style="font-family:'Unbounded',sans-serif;font-size:28px;font-weight:800;color:var(--accent2);" id="hero-best-dep">до 23%</div>
+            <div style="font-size:13px;color:var(--text3);">лучший вклад сегодня</div>
+          </div>
+          <div style="width:1px;background:var(--border)"></div>
+          <div>
+            <div style="font-family:'Unbounded',sans-serif;font-size:28px;font-weight:800;color:var(--green);">от 6%</div>
+            <div style="font-size:13px;color:var(--text3);">семейная ипотека</div>
+          </div>
+          <div style="width:1px;background:var(--border)"></div>
+          <div>
+            <div style="font-family:'Unbounded',sans-serif;font-size:28px;font-weight:800;color:var(--gold);">67</div>
+            <div style="font-size:13px;color:var(--text3);">банков в базе</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-stats fade-up">
+        <div class="stats-title">⚡ Ключевые показатели сейчас</div>
+        <div class="stat-row">
+          <div class="stat-name">
+            <div class="stat-icon" style="background:rgba(59,130,246,0.15)">🏛</div>
+            Ключевая ставка ЦБ
+          </div>
+          <div class="stat-right">
+            <div class="stat-value" id="stat-ks">21%</div>
+            <div class="stat-sub">с 28.10.2024</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-name">
+            <div class="stat-icon" style="background:rgba(34,197,94,0.15)">💰</div>
+            Лучший вклад
+          </div>
+          <div class="stat-right">
+            <div class="stat-value" id="stat-dep" style="color:var(--green)">23%</div>
+            <div class="stat-sub">Т-Банк, 3 мес.</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-name">
+            <div class="stat-icon" style="background:rgba(245,158,11,0.15)">🏠</div>
+            Ипотека (семейная)
+          </div>
+          <div class="stat-right">
+            <div class="stat-value" style="color:var(--gold)">6%</div>
+            <div class="stat-sub">Сбербанк, ВТБ</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-name">
+            <div class="stat-icon" style="background:rgba(167,139,250,0.15)">📈</div>
+            ОФЗ доходность
+          </div>
+          <div class="stat-right">
+            <div class="stat-value" style="color:#a78bfa">~16%</div>
+            <div class="stat-sub">среднесрочные</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-name">
+            <div class="stat-icon" style="background:rgba(239,68,68,0.15)">💳</div>
+            Накоп. счёт
+          </div>
+          <div class="stat-right">
+            <div class="stat-value" style="color:var(--red)">до 22%</div>
+            <div class="stat-sub">Т-Банк, без ограничений</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:12px;background:rgba(59,130,246,0.06);border-radius:10px;font-size:12px;color:var(--text3);">
+          🔄 Данные обновлены: <span id="stat-updated">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW CARDS -->
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">🔥 Горячие предложения <span>сегодня</span></div>
+        <div class="section-sub">Топ-предложения по категориям на основе актуальных данных</div>
+      </div>
+    </div>
+
+    <div class="cards-grid">
+      <div class="feature-card" onclick="showSection('deposits')" style="cursor:pointer">
+        <div class="card-winner"><span class="badge badge-gold">🥇 №1 вклад</span></div>
+        <div class="card-icon">💰</div>
+        <div class="card-label">Вклады · макс. ставка</div>
+        <div class="card-bank">Т-Банк · «Мой доход»</div>
+        <div class="card-rate">23 <span class="card-rate-unit">%</span></div>
+        <div class="card-desc">Срок 3 мес., от 50 000 ₽, без пополнения</div>
+        <div style="margin-top:14px;"><button class="btn-sm primary">Смотреть все вклады →</button></div>
+      </div>
+      <div class="feature-card" onclick="showSection('mortgage')" style="cursor:pointer">
+        <div class="card-winner"><span class="badge badge-green">🏠 Семейная</span></div>
+        <div class="card-icon">🏠</div>
+        <div class="card-label">Ипотека · льготная программа</div>
+        <div class="card-bank">Сбербанк · Семейная ипотека</div>
+        <div class="card-rate">6 <span class="card-rate-unit">%</span></div>
+        <div class="card-desc">Для семей с детьми до 7 лет, новостройка</div>
+        <div style="margin-top:14px;"><button class="btn-sm primary">Калькулятор ипотеки →</button></div>
+      </div>
+      <div class="feature-card" onclick="showSection('invest')" style="cursor:pointer">
+        <div class="card-winner"><span class="badge badge-blue">📊 ОФЗ</span></div>
+        <div class="card-icon">📈</div>
+        <div class="card-label">Инвестиции · накопит. счёт</div>
+        <div class="card-bank">Т-Банк · Накопительный счёт</div>
+        <div class="card-rate">22 <span class="card-rate-unit">%</span></div>
+        <div class="card-desc">Без срока, снятие в любой момент</div>
+        <div style="margin-top:14px;"><button class="btn-sm primary">Смотреть инвестиции →</button></div>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;margin-top:16px;">
+      <div class="section-title" style="font-size:20px;margin-bottom:28px;">Как это работает</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:40px;margin-bottom:12px;">🤖</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:8px;">1. Автоматический сбор</div>
+          <div style="color:var(--text2);font-size:14px;">Наши парсеры каждый час обходят сайты 67 банков и собирают актуальные ставки</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;border-left:1px solid var(--border);border-right:1px solid var(--border);">
+          <div style="font-size:40px;margin-bottom:12px;">📊</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:8px;">2. Умное сравнение</div>
+          <div style="color:var(--text2);font-size:14px;">Фильтруйте, сортируйте, сравнивайте предложения по нужным параметрам</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:40px;margin-bottom:12px;">🔔</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:8px;">3. Уведомления</div>
+          <div style="color:var(--text2);font-size:14px;">Получайте пуш-уведомления или телеграм когда ставка нужного банка изменится</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBSCRIBE FORM -->
+    <div style="background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(99,102,241,0.08));border:1px solid rgba(59,130,246,0.2);border-radius:20px;padding:32px;margin-top:16px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;">
+      <div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px;">🔔 Уведомления об изменении ставок</div>
+        <div style="color:var(--text2);font-size:14px;">Будьте первым, кто узнает об изменении ставок ЦБ и топ-банков. Бесплатно.</div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <input type="email" class="filter-input" placeholder="ваш@email.ru" style="min-width:220px;" />
+        <button class="btn-primary" style="white-space:nowrap">Подписаться</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOSITS SECTION -->
+<section class="page-section" id="section-deposits">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">💰 Вклады <span>банков</span></div>
+        <div class="section-sub" id="dep-updated">Загрузка актуальных данных...</div>
+      </div>
+      <div class="toggle-wrap">
+        <div class="toggle on" id="topBanksToggle" onclick="this.classList.toggle('on');filterTable()"></div>
+        <div class="toggle-label">Только топ-банки</div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label class="filter-label">Сумма</label>
+        <select class="filter-select" id="dep-sum">
+          <option>50 000 ₽</option>
+          <option>100 000 ₽</option>
+          <option selected>300 000 ₽</option>
+          <option>1 000 000 ₽</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Срок</label>
+        <select class="filter-select" id="dep-term">
+          <option>1 месяц</option>
+          <option>3 месяца</option>
+          <option selected>6 месяцев</option>
+          <option>12 месяцев</option>
+          <option>24 месяца</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Капитализация</label>
+        <select class="filter-select">
+          <option selected>Любая</option>
+          <option>С капитализацией</option>
+          <option>Без капитализации</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Тип</label>
+        <select class="filter-select">
+          <option selected>Рублёвый</option>
+          <option>Валютный</option>
+        </select>
+      </div>
+      <button class="filter-btn" onclick="loadDepositData()">🔍 Найти</button>
+    </div>
+
+    <!-- TOP 3 WINNERS -->
+    <div class="cards-grid" id="dep-winners">
+      <div class="feature-card">
+        <div class="card-winner"><span class="badge badge-gold">🥇 Макс. ставка</span></div>
+        <div class="card-label">Максимальная ставка</div>
+        <div class="card-bank" id="w1-bank">Загрузка...</div>
+        <div class="card-rate" id="w1-rate">—</div>
+        <div class="card-desc" id="w1-desc">—</div>
+      </div>
+      <div class="feature-card">
+        <div class="card-winner"><span class="badge badge-blue">⚡ Краткосрочный</span></div>
+        <div class="card-label">Лучший краткосрочный</div>
+        <div class="card-bank" id="w2-bank">Загрузка...</div>
+        <div class="card-rate" id="w2-rate">—</div>
+        <div class="card-desc" id="w2-desc">—</div>
+      </div>
+      <div class="feature-card">
+        <div class="card-winner"><span class="badge badge-green">🟢 Без минимума</span></div>
+        <div class="card-label">Без высокого порога</div>
+        <div class="card-bank" id="w3-bank">Загрузка...</div>
+        <div class="card-rate" id="w3-rate">—</div>
+        <div class="card-desc" id="w3-desc">—</div>
+      </div>
+    </div>
+
+    <div class="table-wrap" id="dep-table-wrap">
+      <div style="padding:20px;display:flex;align-items:center;gap:8px;color:var(--text3);font-size:14px;">
+        <div class="spinner"></div> Загружаем актуальные данные...
+      </div>
+    </div>
+
+    <!-- CALCULATOR -->
+    <div class="calc-grid">
+      <div class="calc-title" style="grid-column:1/-1">🧮 Калькулятор доходности вклада</div>
+      <div>
+        <div class="calc-field">
+          <label class="calc-label">Сумма вклада</label>
+          <input type="number" class="calc-input" id="calc-sum" value="300000" oninput="calcDeposit()">
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Процентная ставка (%)</label>
+          <input type="number" class="calc-input" id="calc-rate" value="20" step="0.1" oninput="calcDeposit()">
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Срок (месяцев)</label>
+          <input type="number" class="calc-input" id="calc-months" value="12" oninput="calcDeposit()">
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Капитализация</label>
+          <select class="calc-input" id="calc-cap" onchange="calcDeposit()">
+            <option value="yes">Ежемесячная</option>
+            <option value="no">В конце срока</option>
+          </select>
+        </div>
+      </div>
+      <div class="calc-result">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text3);margin-bottom:16px;">РЕЗУЛЬТАТ РАСЧЁТА</div>
+        <div class="calc-result-item">
+          <span class="calc-result-label">Сумма вклада</span>
+          <span class="calc-result-value" id="cr-sum">300 000 ₽</span>
+        </div>
+        <div class="calc-result-item">
+          <span class="calc-result-label">Доход (проценты)</span>
+          <span class="calc-result-value highlight" id="cr-income">+60 000 ₽</span>
+        </div>
+        <div class="calc-result-item">
+          <span class="calc-result-label">Налог 13% (если > 180 000 ₽)</span>
+          <span class="calc-result-value" id="cr-tax">0 ₽</span>
+        </div>
+        <div class="calc-result-item">
+          <span class="calc-result-label">Итого к получению</span>
+          <span class="calc-result-value highlight" id="cr-total">360 000 ₽</span>
+        </div>
+        <div class="calc-result-item">
+          <span class="calc-result-label">Эффективная ставка</span>
+          <span class="calc-result-value" id="cr-eff">20.0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MORTGAGE SECTION -->
+<section class="page-section" id="section-mortgage">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">🏠 Ипотека</div>
+        <div class="section-sub">Актуальные ставки и калькулятор ежемесячного платежа</div>
+      </div>
+    </div>
+
+    <!-- PROGRAMS -->
+    <div style="margin-bottom:32px;">
+      <div style="font-family:'Unbounded',sans-serif;font-size:18px;font-weight:700;margin-bottom:20px;">Льготные программы</div>
+      <div class="programs-grid">
+        <div class="program-card" style="border-color:rgba(34,197,94,0.3);">
+          <div class="badge badge-green" style="margin-bottom:10px;">🏠 Семейная</div>
+          <div class="program-title">Семейная ипотека</div>
+          <div class="program-rate">6%</div>
+          <div class="program-details">Для семей с детьми до 7 лет или детьми с инвалидностью. Первый взнос от 20%. На новостройки и ИЖС.</div>
+          <div class="program-cond">Банки: Сбербанк, ВТБ, Альфа-Банк, Газпромбанк и др.</div>
+        </div>
+        <div class="program-card" style="border-color:rgba(59,130,246,0.3);">
+          <div class="badge badge-blue" style="margin-bottom:10px;">💻 IT-ипотека</div>
+          <div class="program-title">IT-ипотека</div>
+          <div class="program-rate">6%</div>
+          <div class="program-details">Для сотрудников аккредитованных IT-компаний. Возраст до 50 лет. Первый взнос от 20%.</div>
+          <div class="program-cond">Банки: Сбербанк, ВТБ, Т-Банк и ещё 15+</div>
+        </div>
+        <div class="program-card" style="border-color:rgba(245,158,11,0.3);">
+          <div class="badge badge-gold" style="margin-bottom:10px;">🌏 Дальневосточная</div>
+          <div class="program-title">Дальневосточная ипотека</div>
+          <div class="program-rate">2%</div>
+          <div class="program-details">Для молодых семей в ДФО до 36 лет. Первый взнос от 20%. Сумма до 9 млн ₽.</div>
+          <div class="program-cond">Банки: Сбербанк, Газпромбанк, ДОМ.РФ</div>
+        </div>
+        <div class="program-card">
+          <div class="badge" style="background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2);margin-bottom:10px;">📊 Стандартная</div>
+          <div class="program-title">Стандартная ипотека</div>
+          <div class="program-rate" id="std-rate" style="color:var(--red)">25–28%</div>
+          <div class="program-details">Рыночная ставка при высокой КС ЦБ. Вторичное жильё и новостройки без льгот. Первый взнос от 15%.</div>
+          <div class="program-cond">Все основные банки</div>
+        </div>
+        <div class="program-card" style="border-color:rgba(167,139,250,0.3);">
+          <div class="badge" style="background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2);margin-bottom:10px;">🌾 Сельская</div>
+          <div class="program-title">Сельская ипотека</div>
+          <div class="program-rate" style="color:#a78bfa">3%</div>
+          <div class="program-details">На жильё в сельских территориях. Первый взнос от 10%. Сумма до 6 млн ₽.</div>
+          <div class="program-cond">Россельхозбанк, Сбербанк</div>
+        </div>
+        <div class="program-card">
+          <div class="badge badge-blue" style="margin-bottom:10px;">🏗 Льготная новостройка</div>
+          <div class="program-title">Льготная на новостройки</div>
+          <div class="program-rate">8%</div>
+          <div class="program-details">Субсидированная программа на новостройки. Первый взнос от 20%. Лимит по регионам.</div>
+          <div class="program-cond">Все банки с госучастием</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MORTGAGE CALCULATOR -->
+    <div class="calc-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="calc-title" style="grid-column:1/-1">🧮 Калькулятор ипотеки</div>
+      <div>
+        <div class="calc-field">
+          <label class="calc-label">Стоимость недвижимости</label>
+          <input type="number" class="calc-input" id="m-price" value="8000000" oninput="syncMortgage();calcMortgage()">
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Первоначальный взнос</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <input type="number" class="calc-input" id="m-down-sum" value="1600000" oninput="syncDown('sum');calcMortgage()">
+            <input type="number" class="calc-input" id="m-down-pct" value="20" oninput="syncDown('pct');calcMortgage()" placeholder="%">
+          </div>
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Процентная ставка (%)</label>
+          <input type="number" class="calc-input" id="m-rate" value="6" step="0.1" oninput="calcMortgage()">
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Срок (лет)</label>
+          <input type="number" class="calc-input" id="m-years" value="20" oninput="calcMortgage()">
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Тип платежа</label>
+          <select class="calc-input" id="m-type" onchange="calcMortgage()">
+            <option value="annuity">Аннуитетный</option>
+            <option value="diff">Дифференцированный</option>
+          </select>
+        </div>
+        <div style="margin-top:16px;">
+          <label class="calc-label" style="margin-bottom:12px;display:block;">Выбрать программу</label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <button class="btn-sm ghost" onclick="setRate(6)">Семейная 6%</button>
+            <button class="btn-sm ghost" onclick="setRate(6)">IT 6%</button>
+            <button class="btn-sm ghost" onclick="setRate(2)">Дальневост. 2%</button>
+            <button class="btn-sm ghost" onclick="setRate(3)">Сельская 3%</button>
+            <button class="btn-sm ghost" onclick="setRate(26)">Рыночная 26%</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="calc-result">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text3);margin-bottom:16px;">РЕЗУЛЬТАТ</div>
+          <div class="calc-result-item">
+            <span class="calc-result-label">Ежемесячный платёж</span>
+            <span class="calc-result-value highlight" id="m-monthly">—</span>
+          </div>
+          <div class="calc-result-item">
+            <span class="calc-result-label">Сумма кредита</span>
+            <span class="calc-result-value" id="m-loan">—</span>
+          </div>
+          <div class="calc-result-item">
+            <span class="calc-result-label">Общая сумма выплат</span>
+            <span class="calc-result-value" id="m-total">—</span>
+          </div>
+          <div class="calc-result-item">
+            <span class="calc-result-label">Переплата</span>
+            <span class="calc-result-value" id="m-overpay" style="color:var(--red)">—</span>
+          </div>
+          <div class="calc-result-item">
+            <span class="calc-result-label">Переплата %</span>
+            <span class="calc-result-value" id="m-overpay-pct" style="color:var(--red)">—</span>
+          </div>
+        </div>
+        <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:12px;padding:16px;margin-top:14px;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--green);margin-bottom:10px;">💸 НАЛОГОВЫЕ ВЫЧЕТЫ</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.8;">
+            Имущественный вычет: <strong style="color:var(--text)">до 260 000 ₽</strong><br>
+            Вычет по процентам: <strong style="color:var(--text)">до 390 000 ₽</strong><br>
+            Итого: <strong style="color:var(--green);font-size:15px;">до 650 000 ₽ возврата</strong>
+          </div>
+        </div>
+        <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);border-radius:12px;padding:16px;margin-top:12px;">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">💡 Брать сейчас или ждать?</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6;" id="wait-advice">Введите параметры для расчёта...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MORTGAGE TABLE -->
+    <div style="margin-top:32px;">
+      <div style="font-family:'Unbounded',sans-serif;font-size:18px;font-weight:700;margin-bottom:16px;">Актуальные ставки банков</div>
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label class="filter-label">Тип жилья</label>
+          <select class="filter-select">
+            <option>Новостройка</option>
+            <option>Вторичка</option>
+            <option>ИЖС</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Программа</label>
+          <select class="filter-select">
+            <option>Все программы</option>
+            <option>Семейная</option>
+            <option>IT-ипотека</option>
+            <option>Льготная</option>
+            <option>Стандартная</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Первый взнос</label>
+          <select class="filter-select">
+            <option>от 10%</option>
+            <option>от 20%</option>
+            <option>от 30%</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap" id="mort-table-wrap">
+        <div style="padding:20px;display:flex;align-items:center;gap:8px;color:var(--text3);font-size:14px;">
+          <div class="spinner"></div> Загружаем актуальные ставки...
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVEST SECTION -->
+<section class="page-section" id="section-invest">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">📈 Инвестиции</div>
+        <div class="section-sub">ОФЗ, брокеры, накопительные счета, ПИФ и ETF</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showInvest('save')">💵 Накопит. счета</button>
+      <button class="tab" onclick="showInvest('ofz')">📃 ОФЗ и облигации</button>
+      <button class="tab" onclick="showInvest('brokers')">📊 Брокеры</button>
+      <button class="tab" onclick="showInvest('pif')">🏦 ПИФ и ETF</button>
+    </div>
+
+    <div class="invest-content active" id="invest-save">
+      <div style="margin-bottom:16px;font-size:14px;color:var(--text2);">
+        Накопительные счета — гибкая альтернатива вкладам. <strong>Снятие в любой момент</strong>, ставка обычно привязана к КС ЦБ.
+      </div>
+      <div class="table-wrap" id="save-table-wrap">
+        <div style="padding:20px;display:flex;align-items:center;gap:8px;color:var(--text3);">
+          <div class="spinner"></div> Загружаем данные...
+        </div>
+      </div>
+    </div>
+
+    <div class="invest-content" id="invest-ofz">
+      <div style="margin-bottom:16px;font-size:14px;color:var(--text2);">
+        Облигации федерального займа (ОФЗ) — государственные ценные бумаги с фиксированным доходом. НДФЛ по купонам: 13%.
+      </div>
+      <div class="table-wrap" id="ofz-table-wrap">
+        <div style="padding:20px;display:flex;align-items:center;gap:8px;color:var(--text3);">
+          <div class="spinner"></div> Загружаем данные...
+        </div>
+      </div>
+    </div>
+
+    <div class="invest-content" id="invest-brokers">
+      <div class="table-wrap" id="brokers-table-wrap">
+        <div style="padding:20px;display:flex;align-items:center;gap:8px;color:var(--text3);">
+          <div class="spinner"></div> Загружаем данные...
+        </div>
+      </div>
+    </div>
+
+    <div class="invest-content" id="invest-pif">
+      <div style="margin-bottom:16px;font-size:14px;color:var(--text2);">
+        Паевые инвестиционные фонды и биржевые фонды — диверсифицированные инструменты для долгосрочного инвестирования.
+      </div>
+      <div class="table-wrap" id="pif-table-wrap">
+        <div style="padding:20px;display:flex;align-items:center;gap:8px;color:var(--text3);">
+          <div class="spinner"></div> Загружаем данные...
+        </div>
+      </div>
+    </div>
+
+    <!-- PORTFOLIO BLOCK -->
+    <div style="margin-top:32px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;">
+      <div style="font-family:'Unbounded',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px;">🎯 Консервативный портфель при КС 21%</div>
+      <div style="color:var(--text2);font-size:14px;margin-bottom:20px;">Рекомендации по распределению активов для минимизации рисков</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;">
+          <div style="font-size:12px;text-transform:uppercase;font-weight:700;color:var(--text3);margin-bottom:8px;">🟢 Консервативный</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.8;">
+            50% — вклады (20-23%)<br>
+            30% — ОФЗ короткие (~16%)<br>
+            20% — накопит. счёт (22%)
+          </div>
+          <div style="margin-top:12px;font-family:'Unbounded',sans-serif;font-size:20px;color:var(--green);">~20%</div>
+          <div style="font-size:12px;color:var(--text3);">доходность в год</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;">
+          <div style="font-size:12px;text-transform:uppercase;font-weight:700;color:var(--text3);margin-bottom:8px;">🟡 Умеренный</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.8;">
+            30% — вклады (20-23%)<br>
+            40% — ОФЗ долгие (~15%)<br>
+            20% — дивидендные акции<br>
+            10% — ПИФ
+          </div>
+          <div style="margin-top:12px;font-family:'Unbounded',sans-serif;font-size:20px;color:var(--gold);">~18-22%</div>
+          <div style="font-size:12px;color:var(--text3);">потенциальная доходность</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;">
+          <div style="font-size:12px;text-transform:uppercase;font-weight:700;color:var(--text3);margin-bottom:8px;">🔴 Агрессивный</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.8;">
+            20% — вклады/накопит.<br>
+            30% — корп. облигации<br>
+            40% — российские акции<br>
+            10% — ПИФ/ETF
+          </div>
+          <div style="margin-top:12px;font-family:'Unbounded',sans-serif;font-size:20px;color:var(--red);">~25-35%</div>
+          <div style="font-size:12px;color:var(--text3);">высокий риск/доходность</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI ADVISOR PAGE -->
+<section class="page-section" id="section-ai">
+  <div class="section">
+    <div style="max-width:760px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:40px;">
+        <div style="font-size:48px;margin-bottom:16px;">🤖</div>
+        <div class="section-title" style="font-size:32px;">ИИ Финансовый <span>советник</span></div>
+        <div style="color:var(--text2);font-size:16px;margin-top:8px;">Задайте любой вопрос о ставках, вкладах, ипотеке и инвестициях</div>
+        <div style="margin-top:10px;padding:8px 16px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:8px;font-size:12px;color:var(--gold);display:inline-block;">
+          ⚠️ Советник не является лицензированным финансовым консультантом. Данные носят информационный характер.
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border2);border-radius:20px;overflow:hidden;">
+        <div style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(99,102,241,0.03));border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:12px;">
+          <div class="ai-avatar" style="width:40px;height:40px;">🤖</div>
+          <div>
+            <div style="font-weight:700;">ФинРадар Советник</div>
+            <div style="font-size:12px;color:var(--green);">● онлайн · отвечает на основе реальных данных</div>
+          </div>
+        </div>
+
+        <div id="ai-full-messages" style="height:440px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;">
+          <div class="msg bot">
+            Привет! Я ФинРадар Советник 👋<br><br>
+            Помогу разобраться с вкладами, ипотекой и инвестициями на основе актуальных данных. Что вас интересует?
+          </div>
+        </div>
+
+        <div style="padding:12px 16px;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+          <button class="quick-btn" onclick="sendAIQuestion(this)">💰 Куда вложить 300 000 ₽ на 6 месяцев</button>
+          <button class="quick-btn" onclick="sendAIQuestion(this)">🏠 Могу ли я получить семейную ипотеку</button>
+          <button class="quick-btn" onclick="sendAIQuestion(this)">📊 Что лучше — вклад или облигации сейчас</button>
+          <button class="quick-btn" onclick="sendAIQuestion(this)">❓ Разница между ПИФом и ETF</button>
+        </div>
+
+        <div style="border-top:1px solid var(--border);padding:16px 20px;display:flex;gap:10px;">
+          <input type="text" id="ai-full-input" class="calc-input" placeholder="Спросите что угодно о финансах..." style="flex:1;" onkeydown="if(event.key==='Enter')sendAIFull()">
+          <button class="btn-primary" onclick="sendAIFull()" style="white-space:nowrap">Отправить →</button>
+        </div>
+        <div style="padding:8px 20px 14px;font-size:11px;color:var(--text3);text-align:center;">
+          Советник использует данные ФинРадар. Не является заменой профессиональной финансовой консультации.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="logo" href="#" onclick="showSection('home')">
+        <div class="logo-icon">📡</div>
+        <div class="logo-text">Фин<span>Радар</span></div>
+      </a>
+      <p>Мониторинг ставок банков России в реальном времени. Помогаем принимать взвешенные финансовые решения.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Разделы</div>
+      <a href="#" onclick="showSection('deposits')">Вклады</a>
+      <a href="#" onclick="showSection('mortgage')">Ипотека</a>
+      <a href="#" onclick="showSection('invest')">Инвестиции</a>
+      <a href="#" onclick="showSection('ai')">ИИ Советник</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Компания</div>
+      <a href="#">О сервисе</a>
+      <a href="#">Методология</a>
+      <a href="#">API для бизнеса</a>
+      <a href="#">PRO-подписка</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Поддержка</div>
+      <a href="#">Помощь</a>
+      <a href="#">Политика конф.</a>
+      <a href="#">Условия</a>
+      <a href="#">Контакты</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2025 ФинРадар. Все права защищены.</div>
+    <div style="display:flex;gap:16px;">
+      <a href="#" style="color:var(--text3);text-decoration:none;">Telegram</a>
+      <a href="#" style="color:var(--text3);text-decoration:none;">ВКонтакте</a>
+    </div>
+  </div>
+  <div class="footer-disclaimer">
+    <strong>Дисклеймер:</strong> Информация на сайте носит исключительно ознакомительный характер и не является офертой, инвестиционной рекомендацией или финансовой консультацией. Актуальные условия уточняйте непосредственно в банках. Данные о ставках получены путём мониторинга открытых источников и могут незначительно отличаться от официальных. ФинРадар не несёт ответственности за точность данных третьих сторон.
+  </div>
+</footer>
+
+<!-- FLOATING AI -->
+<div class="ai-chat-float">
+  <div class="ai-panel" id="aiPanel">
+    <div class="ai-header">
+      <div class="ai-avatar">🤖</div>
+      <div>
+        <div class="ai-name">ФинРадар Советник</div>
+        <div class="ai-status">● онлайн</div>
+      </div>
+      <button class="ai-close" onclick="toggleAI()">✕</button>
+    </div>
+    <div class="ai-messages" id="aiMessages">
+      <div class="msg bot">Привет! Задайте любой вопрос о вкладах, ипотеке или инвестициях. Отвечаю на основе актуальных данных 📊</div>
+    </div>
+    <div class="quick-btns" id="quickBtns">
+      <button class="quick-btn" onclick="sendQuick(this)">💰 Куда вложить 300 000 ₽ на 6 месяцев</button>
+      <button class="quick-btn" onclick="sendQuick(this)">🏠 Могу ли я получить семейную ипотеку</button>
+      <button class="quick-btn" onclick="sendQuick(this)">📊 Что лучше — вклад или облигации сейчас</button>
+      <button class="quick-btn" onclick="sendQuick(this)">❓ Разница между ПИФом и ETF</button>
+    </div>
+    <div class="ai-input-wrap">
+      <input type="text" class="ai-input" id="aiInput" placeholder="Спросите о финансах..." onkeydown="if(event.key==='Enter')sendMessage()">
+      <button class="ai-send" onclick="sendMessage()">→</button>
+    </div>
+    <div class="ai-disclaimer">⚠️ Не является финансовой консультацией</div>
+  </div>
+  <button class="ai-btn" onclick="toggleAI()">
+    🤖
+    <div class="ai-badge"></div>
+  </button>
+</div>
+
+<script>
+// ===== STATE =====
+const DATA = {
+  deposits: [],
+  mortgage: [],
+  savings: [],
+  ofz: [],
+  brokers: [],
+  pif: [],
+  lastUpdated: null,
+  keyRate: 21,
+};
+
+let KEY_RATE = 21;
+
+// ===== ЦВЕТА БАНКОВ =====
+const BANK_COLORS = {
+  'Т-Банк':          { color:'#ffdd2d', text:'#000', logo:'Т' },
+  'Сбербанк':        { color:'#21a038', text:'#fff', logo:'С' },
+  'ВТБ':             { color:'#003285', text:'#fff', logo:'В' },
+  'Альфа-Банк':      { color:'#ef3124', text:'#fff', logo:'А' },
+  'Газпромбанк':     { color:'#00a5c8', text:'#fff', logo:'Г' },
+  'МКБ':             { color:'#e31e25', text:'#fff', logo:'М' },
+  'Россельхозбанк':  { color:'#00773f', text:'#fff', logo:'Р' },
+  'Промсвязьбанк':   { color:'#f36c22', text:'#fff', logo:'П' },
+  'Совкомбанк':      { color:'#0f4c9e', text:'#fff', logo:'Со' },
+  'ДОМ.РФ':          { color:'#005aa5', text:'#fff', logo:'Д' },
+};
+
+function bankStyle(name) {
+  return BANK_COLORS[name] || { color:'#3b82f6', text:'#fff', logo: name[0] };
+}
+
+// ===== ЗАГРУЗКА ДАННЫХ ИЗ rates.json =====
+// На GitHub Pages файл лежит рядом с index.html
+// Локально — открыть через Live Server или python -m http.server
+const RATES_URL = './data/rates.json';
+
+let ratesCache = null;
+
+async function fetchRates() {
+  if (ratesCache) return ratesCache;
+  try {
+    const resp = await fetch(RATES_URL + '?t=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    ratesCache = await resp.json();
+    return ratesCache;
+  } catch (e) {
+    console.warn('Не удалось загрузить rates.json:', e.message);
+    return null;
+  }
+}
+
+function normalizeDeposit(d) {
+  // Приводим данные из rates.json к формату, который ждёт renderDepositTable
+  const s = bankStyle(d.bank);
+  return {
+    bank: d.bank,
+    logo: s.logo,
+    color: s.color,
+    text: s.text,
+    product: d.product,
+    rate: d.rate,
+    term: d.term || '—',
+    minSum: d.min_amount || 0,
+    change: d.changed || 0,
+    cap: d.has_capitalization || false,
+    top: true,
+    updated: 'обновлено парсером',
+    is_promo: d.is_promo || false,
+  };
+}
+
+function normalizeMortgage(d) {
+  const s = bankStyle(d.bank);
+  return {
+    bank: d.bank,
+    logo: s.logo,
+    color: s.color,
+    text: s.text,
+    product: d.product,
+    rate: d.rate,
+    type: d.mortgage_type || 'Стандартная',
+    minDown: d.min_down_pct || 20,
+    payment: null,
+    change: d.changed || 0,
+    top: true,
+    updated: 'обновлено парсером',
+  };
+}
+
+function normalizeSavings(d) {
+  const s = bankStyle(d.bank);
+  return {
+    bank: d.bank,
+    logo: s.logo,
+    color: s.color,
+    text: s.text,
+    product: d.product,
+    rate: d.rate,
+    minSum: d.min_amount || 0,
+    withdraw: 'В любой момент',
+    change: d.changed || 0,
+    top: true,
+    updated: 'обновлено парсером',
+  };
+}
+
+const OFZ_DATA = [
+  { code:'ОФЗ-26238', coupon:7.10, ytm:15.8, maturity:'2041', nextCoupon:'07.06.2025', price:55.2, change:+0.1 },
+  { code:'ОФЗ-26240', coupon:7.00, ytm:15.6, maturity:'2036', nextCoupon:'15.05.2025', price:60.1, change:-0.2 },
+  { code:'ОФЗ-26241', coupon:9.50, ytm:15.4, maturity:'2032', nextCoupon:'22.04.2025', price:73.5, change:0 },
+  { code:'ОФЗ-26242', coupon:9.00, ytm:16.1, maturity:'2029', nextCoupon:'10.03.2025', price:78.9, change:+0.3 },
+  { code:'ОФЗ-26244', coupon:11.25, ytm:16.3, maturity:'2034', nextCoupon:'18.06.2025', price:82.3, change:-0.1 },
+  { code:'ОФЗ-29014', coupon:'КС+1.5', ytm:22.5, maturity:'2026', nextCoupon:'20.03.2025', price:100.1, change:0 },
+  { code:'ОФЗ-29025', coupon:'КС+2.0', ytm:23.0, maturity:'2032', nextCoupon:'15.04.2025', price:98.7, change:+0.2 },
+];
+
+const BROKERS_DATA = [
+  { name:'Т-Банк Инвестиции', stocks:0.3, bonds:0.3, depository:'0', min:0, special:'Без депозитария', top:true },
+  { name:'Сбербанк Инвестор', stocks:0.3, bonds:0.3, depository:'0', min:0, special:'Интеграция СберID', top:true },
+  { name:'ВТБ Мои инвестиции', stocks:0.05, bonds:0.05, depository:'0.01%/год', min:0, special:'Низкие комиссии', top:true },
+  { name:'БКС Брокер', stocks:0.1, bonds:0.1, depository:'177 ₽/мес', min:0, special:'Полный сервис', top:false },
+  { name:'Финам', stocks:0.05, bonds:0.04, depository:'177 ₽/мес', min:0, special:'Маргинальная торговля', top:false },
+  { name:'Альфа-Инвестиции', stocks:0.3, bonds:0.3, depository:'0', min:0, special:'Интеграция с Альфа', top:true },
+];
+
+const PIF_DATA = [
+  { name:'БПИФ «Тинькофф — Стратегия роста»', type:'Акции РФ', ytd:'+12.5%', fee:'0.99%/год', min:1, manager:'Т-Банк' },
+  { name:'БПИФ Сбербанк — Индекс МосБиржи', type:'Индексный', ytd:'+8.3%', fee:'0.80%/год', min:1, manager:'СберАМ' },
+  { name:'БПИФ ВТБ — Облигации', type:'Облигации', ytd:'+18.2%', fee:'0.50%/год', min:1, manager:'ВТБ Капитал' },
+  { name:'БПИФ Альфа — Технологии', type:'Акции тех.', ytd:'+6.7%', fee:'1.20%/год', min:1, manager:'АльфаКапитал' },
+  { name:'ПИФ Газпромбанк — Облигации', type:'Облигации', ytd:'+16.5%', fee:'0.75%/год', min:10000, manager:'Газпромбанк АМ' },
+];
+
+// ===== NAVIGATION =====
+function showSection(name) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo(0, 0);
+
+  if (name === 'deposits' && !DATA.deposits.length) loadDepositData();
+  if (name === 'mortgage' && !DATA.mortgage.length) loadMortgageData();
+  if (name === 'invest') loadInvestData();
+}
+
+// ===== TICKER =====
+function updateTicker() {
+  const now = new Date();
+  document.getElementById('tk-time').textContent = now.toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'});
+  document.getElementById('stat-updated').textContent = now.toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'});
+}
+
+setInterval(updateTicker, 60000);
+updateTicker();
+
+// ===== DEPOSIT TABLE =====
+async function loadDepositData() {
+  const rates = await fetchRates();
+  if (rates) {
+    DATA.deposits = (rates.deposits || []).map(normalizeDeposit);
+    DATA.savings  = (rates.savings  || []).map(normalizeSavings);
+    DATA.mortgage = (rates.mortgage || []).map(normalizeMortgage);
+    DATA.keyRate  = rates.key_rate?.rate || 21;
+    KEY_RATE      = DATA.keyRate;
+
+    // Обновляем тикер и шапку
+    const kr = rates.key_rate?.rate || 21;
+    const bestDep = rates.stats?.best_deposit || '—';
+    const bestSav = rates.stats?.best_savings || '—';
+    document.getElementById('tk-rate').textContent  = kr + '%';
+    document.getElementById('tk-deposit').textContent = 'до ' + bestDep + '%';
+    document.getElementById('tk-save').textContent  = bestSav + '%';
+    document.getElementById('stat-ks').textContent  = kr + '%';
+    document.getElementById('stat-dep').textContent = bestDep + '%';
+    document.getElementById('hero-best-dep').textContent = 'до ' + bestDep + '%';
+
+    // Метка обновления
+    const label = `Данные парсера • ${rates.updated_at_display || 'только что'}`;
+    document.getElementById('dep-updated').textContent = label;
+    document.getElementById('stat-updated').textContent = rates.updated_at_display || '—';
+
+    // Промо-значок если есть акции
+    const promosCount = rates.stats?.promos_count || 0;
+    if (promosCount > 0) {
+      const badge = document.createElement('span');
+      badge.className = 'badge badge-gold';
+      badge.style.marginLeft = '8px';
+      badge.textContent = '🔥 ' + promosCount + ' акции';
+      const depTitle = document.querySelector('#section-deposits .section-title');
+      if (depTitle && !depTitle.querySelector('.badge')) depTitle.appendChild(badge);
+    }
+  } else {
+    // Если rates.json недоступен (открыт как файл без сервера) — используем демо-данные
+    DATA.deposits = FALLBACK_DEPOSITS;
+    DATA.savings  = FALLBACK_SAVINGS;
+    DATA.mortgage = FALLBACK_MORTGAGE;
+    document.getElementById('dep-updated').textContent = '⚠️ Демо-данные • для актуальных ставок откройте через GitHub Pages';
+  }
+
+  const sorted = [...DATA.deposits].sort((a,b) => b.rate - a.rate);
+
+  const byRate    = sorted[0];
+  const shortTerm = sorted.filter(d => d.term && (d.term.includes('3') || d.term.includes('1'))).sort((a,b) => b.rate - a.rate)[0] || sorted[0];
+  const noMin     = sorted.filter(d => d.minSum <= 10000).sort((a,b) => b.rate - a.rate)[0] || sorted[sorted.length-1];
+
+  setWinner('w1', byRate,    'Максимальная доходность');
+  setWinner('w2', shortTerm, 'Лучший краткосрочный');
+  setWinner('w3', noMin,     'Без высокого порога');
+
+  renderDepositTable(sorted);
+}
+
+// ===== FALLBACK (когда rates.json недоступен) =====
+const FALLBACK_DEPOSITS = [
+  { bank:'Т-Банк', logo:'Т', color:'#ffdd2d', text:'#000', product:'Мой доход', rate:23.0, term:'3 мес.', minSum:50000, change:0, cap:false, top:true, updated:'демо' },
+  { bank:'МКБ', logo:'М', color:'#e31e25', text:'#fff', product:'МКБ Максимум', rate:22.5, term:'3 мес.', minSum:10000, change:1.5, cap:false, top:true, updated:'демо', is_promo:true },
+  { bank:'Альфа-Банк', logo:'А', color:'#ef3124', text:'#fff', product:'Альфа-Вклад', rate:21.0, term:'3 мес.', minSum:10000, change:0, cap:false, top:true, updated:'демо' },
+  { bank:'ВТБ', logo:'В', color:'#003285', text:'#fff', product:'Надёжный', rate:20.5, term:'3 мес.', minSum:100000, change:0.5, cap:false, top:true, updated:'демо' },
+  { bank:'Сбербанк', logo:'С', color:'#21a038', text:'#fff', product:'СберВклад+', rate:20.0, term:'3 мес.', minSum:100000, change:-0.5, cap:false, top:true, updated:'демо' },
+];
+const FALLBACK_SAVINGS = [
+  { bank:'Т-Банк', logo:'Т', color:'#ffdd2d', text:'#000', product:'Накопительный счёт', rate:22.0, minSum:0, withdraw:'В любой момент', change:0, top:true, updated:'демо' },
+  { bank:'Альфа-Банк', logo:'А', color:'#ef3124', text:'#fff', product:'Альфа-Счёт', rate:20.0, minSum:0, withdraw:'Ежедневно', change:1.0, top:true, updated:'демо' },
+  { bank:'ВТБ', logo:'В', color:'#003285', text:'#fff', product:'Накопительный ВТБ', rate:19.0, minSum:0, withdraw:'Ежедневно', change:0, top:true, updated:'демо' },
+  { bank:'Сбербанк', logo:'С', color:'#21a038', text:'#fff', product:'СберСчёт', rate:18.0, minSum:0, withdraw:'В любой момент', change:0, top:true, updated:'демо' },
+];
+const FALLBACK_MORTGAGE = [
+  { bank:'Сбербанк', logo:'С', color:'#21a038', text:'#fff', product:'Семейная ипотека', rate:6.0, type:'Семейная', minDown:20, payment:null, change:0, top:true, updated:'демо' },
+  { bank:'ВТБ', logo:'В', color:'#003285', text:'#fff', product:'IT-ипотека', rate:6.0, type:'IT', minDown:20, payment:null, change:0, top:true, updated:'демо' },
+  { bank:'Сбербанк', logo:'С', color:'#21a038', text:'#fff', product:'Стандартная', rate:25.8, type:'Стандартная', minDown:15, payment:null, change:0.3, top:true, updated:'демо' },
+];
+
+function setWinner(id, d, label) {
+  if (!d) return;
+  document.getElementById(id+'-bank').textContent = d.bank + ' · ' + d.product;
+  document.getElementById(id+'-rate').innerHTML = `${d.rate} <span class="card-rate-unit">%</span>`;
+  document.getElementById(id+'-desc').textContent = `${d.term}, от ${fmt(d.minSum)} ₽`;
+}
+
+function renderDepositTable(data) {
+  const onlyTop = document.getElementById('topBanksToggle').classList.contains('on');
+  const filtered = onlyTop ? data.filter(d => d.top) : data;
+
+  let html = `<table class="data-table">
+    <thead><tr>
+      <th>Банк и продукт</th>
+      <th onclick="sortDep('rate')" style="cursor:pointer">Ставка ↕</th>
+      <th>Срок</th>
+      <th>Мин. сумма</th>
+      <th>Капитализация</th>
+      <th onclick="sortDep('change')" style="cursor:pointer">За день ↕</th>
+      <th>Обновлено</th>
+      <th></th>
+    </tr></thead><tbody>`;
+
+  filtered.forEach(d => {
+    const changeHtml = d.change > 0
+      ? `<span class="change-up">↑ +${d.change}%</span>`
+      : d.change < 0
+      ? `<span class="change-down">↓ ${d.change}%</span>`
+      : `<span class="change-same">—</span>`;
+
+    html += `<tr>
+      <td><div class="bank-cell">
+        <div class="bank-logo" style="background:${d.color};color:${d.text}">${d.logo}</div>
+        <div><div class="bank-name">${d.bank}</div><div class="bank-product">${d.product}</div></div>
+      </div></td>
+      <td><span class="rate-value">${d.rate}%</span></td>
+      <td>${d.term}</td>
+      <td>${fmt(d.minSum)} ₽</td>
+      <td>${d.cap ? '<span class="badge badge-green">Есть</span>' : '<span class="badge" style="background:rgba(100,116,139,0.1);color:var(--text3);border:1px solid var(--border)">Нет</span>'}</td>
+      <td>${changeHtml}</td>
+      <td><span class="updated-time">${d.updated}</span></td>
+      <td style="display:flex;gap:6px;">
+        <button class="btn-sm ghost" onclick="fillCalc(${d.rate})">Считать</button>
+        <button class="btn-sm primary">Открыть ↗</button>
+      </td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('dep-table-wrap').innerHTML = html;
+}
+
+function filterTable() { if(DATA.deposits.length) renderDepositTable([...DATA.deposits].sort((a,b)=>b.rate-a.rate)); }
+
+let depSortDir = -1;
+function sortDep(field) {
+  depSortDir *= -1;
+  const sorted = [...DATA.deposits].sort((a,b) => depSortDir * (b[field] - a[field]));
+  renderDepositTable(sorted);
+}
+
+function fillCalc(rate) {
+  document.getElementById('calc-rate').value = rate;
+  calcDeposit();
+  document.getElementById('calc-rate').focus();
+}
+
+// ===== DEPOSIT CALC =====
+function calcDeposit() {
+  const sum = parseFloat(document.getElementById('calc-sum').value) || 0;
+  const rate = parseFloat(document.getElementById('calc-rate').value) || 0;
+  const months = parseFloat(document.getElementById('calc-months').value) || 0;
+  const cap = document.getElementById('calc-cap').value === 'yes';
+
+  let income;
+  if (cap) {
+    const monthly = rate / 100 / 12;
+    income = sum * (Math.pow(1 + monthly, months) - 1);
+  } else {
+    income = sum * rate / 100 * months / 12;
+  }
+
+  const taxFreeLimit = KEY_RATE / 100 * 1000000;
+  const taxBase = Math.max(0, income - taxFreeLimit);
+  const tax = taxBase * 0.13;
+  const total = sum + income - tax;
+  const effRate = income / sum / months * 12 * 100;
+
+  document.getElementById('cr-sum').textContent = fmt(sum) + ' ₽';
+  document.getElementById('cr-income').textContent = '+' + fmt(Math.round(income)) + ' ₽';
+  document.getElementById('cr-tax').textContent = fmt(Math.round(tax)) + ' ₽';
+  document.getElementById('cr-total').textContent = fmt(Math.round(total)) + ' ₽';
+  document.getElementById('cr-eff').textContent = effRate.toFixed(2) + '%';
+}
+
+calcDeposit();
+
+// ===== MORTGAGE TABLE =====
+async function loadMortgageData() {
+  if (!DATA.mortgage.length) await loadDepositData();
+  renderMortgageTable(DATA.mortgage);
+  calcMortgage();
+}
+
+function renderMortgageTable(data) {
+  const price = parseFloat(document.getElementById('m-price').value) || 8000000;
+  const downPct = parseFloat(document.getElementById('m-down-pct').value) || 20;
+  const years = parseFloat(document.getElementById('m-years').value) || 20;
+
+  let html = `<table class="data-table">
+    <thead><tr>
+      <th>Банк и продукт</th>
+      <th>Ставка</th>
+      <th>Программа</th>
+      <th>Перв. взнос</th>
+      <th>Ежемес. платёж</th>
+      <th>За день</th>
+      <th>Обновлено</th>
+      <th></th>
+    </tr></thead><tbody>`;
+
+  const typeColors = {
+    'Семейная': 'badge-green',
+    'IT': 'badge-blue',
+    'Сельская': 'badge-gold',
+    'Дальневост.': 'badge-blue',
+    'Льготная': 'badge-blue',
+    'Стандартная': 'badge-red',
+  };
+
+  data.forEach(d => {
+    const loan = price * (1 - downPct/100);
+    const monthly = calcMonthlyPayment(loan, d.rate, years);
+    const changeHtml = d.change > 0 ? `<span class="change-up">↑ +${d.change}%</span>`
+      : d.change < 0 ? `<span class="change-down">↓ ${d.change}%</span>` : `<span class="change-same">—</span>`;
+    const bCls = typeColors[d.type] || 'badge-blue';
+
+    html += `<tr>
+      <td><div class="bank-cell">
+        <div class="bank-logo" style="background:${d.color};color:${d.text}">${d.logo}</div>
+        <div><div class="bank-name">${d.bank}</div><div class="bank-product">${d.product}</div></div>
+      </div></td>
+      <td><span class="rate-value">${d.rate}%</span></td>
+      <td><span class="badge ${bCls}">${d.type}</span></td>
+      <td>от ${d.minDown}%</td>
+      <td><strong style="color:var(--accent2)">${fmt(Math.round(monthly))} ₽/мес</strong></td>
+      <td>${changeHtml}</td>
+      <td><span class="updated-time">${d.updated}</span></td>
+      <td><button class="btn-sm primary" onclick="setRate(${d.rate})">Считать →</button></td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('mort-table-wrap').innerHTML = html;
+}
+
+function calcMonthlyPayment(loan, rate, years) {
+  const r = rate / 100 / 12;
+  const n = years * 12;
+  if (r === 0) return loan / n;
+  return loan * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+}
+
+function syncMortgage() {
+  const price = parseFloat(document.getElementById('m-price').value) || 0;
+  const pct = parseFloat(document.getElementById('m-down-pct').value) || 20;
+  document.getElementById('m-down-sum').value = Math.round(price * pct / 100);
+}
+
+function syncDown(from) {
+  const price = parseFloat(document.getElementById('m-price').value) || 8000000;
+  if (from === 'sum') {
+    const sum = parseFloat(document.getElementById('m-down-sum').value) || 0;
+    document.getElementById('m-down-pct').value = Math.round(sum / price * 100);
+  } else {
+    const pct = parseFloat(document.getElementById('m-down-pct').value) || 0;
+    document.getElementById('m-down-sum').value = Math.round(price * pct / 100);
+  }
+}
+
+function setRate(r) {
+  document.getElementById('m-rate').value = r;
+  calcMortgage();
+}
+
+function calcMortgage() {
+  const price = parseFloat(document.getElementById('m-price').value) || 0;
+  const downSum = parseFloat(document.getElementById('m-down-sum').value) || 0;
+  const rate = parseFloat(document.getElementById('m-rate').value) || 0;
+  const years = parseFloat(document.getElementById('m-years').value) || 0;
+
+  const loan = price - downSum;
+  const monthly = calcMonthlyPayment(loan, rate, years);
+  const totalPay = monthly * years * 12;
+  const overpay = totalPay - loan;
+  const overpayPct = loan > 0 ? (overpay / loan * 100) : 0;
+
+  document.getElementById('m-monthly').textContent = fmt(Math.round(monthly)) + ' ₽/мес';
+  document.getElementById('m-loan').textContent = fmt(Math.round(loan)) + ' ₽';
+  document.getElementById('m-total').textContent = fmt(Math.round(totalPay)) + ' ₽';
+  document.getElementById('m-overpay').textContent = '+' + fmt(Math.round(overpay)) + ' ₽';
+  document.getElementById('m-overpay-pct').textContent = '+' + overpayPct.toFixed(0) + '% к телу долга';
+
+  // Smart advice
+  const advice = rate <= 8
+    ? `При ставке ${rate}% ипотека является льготной. Это исторически низкая ставка — брать сейчас выгоднее, чем ждать.`
+    : rate <= 15
+    ? `При ставке ${rate}% ипотека умеренная. Если КС ЦБ снизится до 12-14%, рефинансирование сэкономит деньги.`
+    : `При рыночной ставке ${rate}% переплата составит ${fmt(Math.round(overpay))} ₽. Если можете — рассмотрите льготные программы или ждите снижения КС.`;
+
+  document.getElementById('wait-advice').textContent = advice;
+
+  if (DATA.mortgage.length) renderMortgageTable(DATA.mortgage);
+}
+
+// ===== INVEST DATA =====
+async function loadInvestData() {
+  if (!DATA.savings.length) await loadDepositData();
+  renderSavingsTable(DATA.savings);
+  // OFZ
+  renderOFZTable(OFZ_DATA);
+  // Brokers
+  renderBrokersTable(BROKERS_DATA);
+  // PIF
+  renderPIFTable(PIF_DATA);
+}
+
+function renderSavingsTable(data) {
+  let html = `<table class="data-table">
+    <thead><tr><th>Банк</th><th>Продукт</th><th>Ставка</th><th>Снятие</th><th>Мин. сумма</th><th>За день</th><th>Обновлено</th><th></th></tr></thead><tbody>`;
+  data.sort((a,b)=>b.rate-a.rate).forEach(d => {
+    const ch = d.change>0 ? `<span class="change-up">↑ +${d.change}%</span>` : `<span class="change-same">—</span>`;
+    html += `<tr>
+      <td><div class="bank-cell">
+        <div class="bank-logo" style="background:${d.color};color:${d.text}">${d.logo}</div>
+        <div class="bank-name">${d.bank}</div>
+      </div></td>
+      <td>${d.product}</td>
+      <td><span class="rate-value">${d.rate}%</span></td>
+      <td><span class="badge badge-green">${d.withdraw}</span></td>
+      <td>${d.minSum === 0 ? 'Без минимума' : fmt(d.minSum) + ' ₽'}</td>
+      <td>${ch}</td>
+      <td><span class="updated-time">${d.updated}</span></td>
+      <td><button class="btn-sm primary">Открыть ↗</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('save-table-wrap').innerHTML = html;
+}
+
+function renderOFZTable(data) {
+  let html = `<table class="data-table">
+    <thead><tr><th>Выпуск</th><th>Доходность к погашению</th><th>Купон</th><th>Дата погашения</th><th>Ближ. купон</th><th>Цена (%)</th><th>За день</th><th></th></tr></thead><tbody>`;
+  data.forEach(d => {
+    const ch = d.change>0 ? `<span class="change-up">↑ +${d.change}</span>` : d.change<0 ? `<span class="change-down">↓ ${d.change}</span>` : `<span class="change-same">—</span>`;
+    html += `<tr>
+      <td><strong>${d.code}</strong></td>
+      <td><span class="rate-value" style="font-size:18px">${d.ytm}%</span></td>
+      <td>${typeof d.coupon === 'number' ? d.coupon+'%' : d.coupon}</td>
+      <td>${d.maturity}</td>
+      <td>${d.nextCoupon}</td>
+      <td>${d.price}</td>
+      <td>${ch}</td>
+      <td><button class="btn-sm primary">Купить ↗</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('ofz-table-wrap').innerHTML = html;
+}
+
+function renderBrokersTable(data) {
+  let html = `<table class="data-table">
+    <thead><tr><th>Брокер</th><th>Комиссия акции</th><th>Комиссия облигации</th><th>Депозитарий</th><th>Мин. депозит</th><th>Особенности</th><th></th></tr></thead><tbody>`;
+  data.forEach(d => {
+    html += `<tr>
+      <td><strong>${d.name}</strong></td>
+      <td><span class="badge badge-green">${d.stocks}%</span></td>
+      <td><span class="badge badge-green">${d.bonds}%</span></td>
+      <td>${d.depository}</td>
+      <td>${d.min === 0 ? 'Нет' : fmt(d.min)+' ₽'}</td>
+      <td style="color:var(--text2);font-size:13px">${d.special}</td>
+      <td><button class="btn-sm primary">Открыть ↗</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('brokers-table-wrap').innerHTML = html;
+}
+
+function renderPIFTable(data) {
+  let html = `<table class="data-table">
+    <thead><tr><th>Название фонда</th><th>Тип</th><th>Доходность (YTD)</th><th>Комиссия</th><th>Мин. вложение</th><th>Управляющая</th><th></th></tr></thead><tbody>`;
+  data.forEach(d => {
+    const pos = d.ytd.startsWith('+');
+    html += `<tr>
+      <td><strong>${d.name}</strong></td>
+      <td><span class="badge badge-blue">${d.type}</span></td>
+      <td><span class="${pos ? 'change-up' : 'change-down'}" style="font-size:15px">${d.ytd}</span></td>
+      <td>${d.fee}</td>
+      <td>${d.min} ₽</td>
+      <td style="color:var(--text2)">${d.manager}</td>
+      <td><button class="btn-sm primary">Открыть ↗</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('pif-table-wrap').innerHTML = html;
+}
+
+// ===== INVEST TABS =====
+function showInvest(name) {
+  document.querySelectorAll('.invest-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#section-invest .tab').forEach((t,i) => {
+    t.classList.remove('active');
+  });
+  document.getElementById('invest-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== AI CHAT (uses Anthropic API) =====
+let aiOpen = false;
+
+function buildAISystem() {
+  const d = ratesCache;
+  const kr = d?.key_rate?.rate || 21;
+  const bestDep = d?.deposits?.[0];
+  const bestSav = d?.savings?.[0];
+  const updated = d?.updated_at_display || new Date().toLocaleDateString('ru-RU');
+  return `Ты — ФинРадар Советник, финансовый ассистент российского сервиса мониторинга ставок банков.
+
+Актуальные данные на ${updated}:
+- Ключевая ставка ЦБ РФ: ${kr}%
+${bestDep ? `- Лучший вклад: ${bestDep.bank} «${bestDep.product}» — ${bestDep.rate}% (${bestDep.term || '—'})` : '- Лучший вклад: до 23% (Т-Банк, 3 мес.)'}
+${bestSav ? `- Лучший накопительный счёт: ${bestSav.bank} — ${bestSav.rate}% (снять в любой момент)` : '- Накопительный счёт: до 22% (Т-Банк)'}
+- Семейная ипотека: 6% (Сбербанк, ВТБ, Т-Банк)
+- IT-ипотека: 6%
+- Рыночная ипотека: ~${Math.round(kr * 1.25)}%
+- Дальневосточная ипотека: 2%
+- Сельская ипотека: 3%
+- ОФЗ средняя доходность: ~15-16%
+
+Правила:
+1. Отвечай на русском языке, кратко и по делу
+2. Используй конкретные цифры из данных выше
+3. Всегда добавляй: "Данные актуальны на ${updated}, уточняйте условия в банке"
+4. В начале ответа дай конкретный совет, потом объяснение
+5. Используй эмодзи для удобства чтения`;
+}
+
+function toggleAI() {
+  aiOpen = !aiOpen;
+  document.getElementById('aiPanel').classList.toggle('open', aiOpen);
+}
+
+async function sendMessage() {
+  const input = document.getElementById('aiInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  document.getElementById('quickBtns').style.display = 'none';
+  addMessage('user', text, 'aiMessages');
+  await callAI(text, 'aiMessages');
+}
+
+async function sendQuick(btn) {
+  const text = btn.textContent.trim();
+  document.getElementById('quickBtns').style.display = 'none';
+  addMessage('user', text, 'aiMessages');
+  await callAI(text, 'aiMessages');
+}
+
+async function sendAIQuestion(btn) {
+  const text = btn.textContent.trim();
+  addMessage('user', text, 'ai-full-messages');
+  await callAI(text, 'ai-full-messages');
+}
+
+async function sendAIFull() {
+  const input = document.getElementById('ai-full-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addMessage('user', text, 'ai-full-messages');
+  await callAI(text, 'ai-full-messages');
+}
+
+function addMessage(role, text, containerId) {
+  const container = document.getElementById(containerId);
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.textContent = text;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function addThinking(containerId) {
+  const container = document.getElementById(containerId);
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = '<div class="thinking"><span></span><span></span><span></span></div>';
+  div.id = 'thinking-' + containerId;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeThinking(containerId) {
+  const el = document.getElementById('thinking-' + containerId);
+  if (el) el.remove();
+}
+
+async function callAI(userMessage, containerId) {
+  addThinking(containerId);
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: buildAISystem(),
+        messages: [{ role: 'user', content: userMessage }]
+      })
+    });
+    const data = await response.json();
+    removeThinking(containerId);
+    const text = data.content && data.content[0] ? data.content[0].text : 'Извините, произошла ошибка. Попробуйте ещё раз.';
+    addMessage('bot', text, containerId);
+  } catch (e) {
+    removeThinking(containerId);
+    addMessage('bot', 'Не удалось получить ответ. Проверьте подключение к интернету.', containerId);
+  }
+}
+
+// ===== UTILS =====
+function fmt(n) {
+  return n.toLocaleString('ru-RU');
+}
+
+// ===== INITIAL LOAD =====
+window.addEventListener('load', async () => {
+  await loadDepositData();
+  syncMortgage();
+  calcMortgage();
+});
+</script>
+</body>
+</html>
