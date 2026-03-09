@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-03-09T07:10:07.347074",
-  "updated_at_display": "09.03.2026 в 07:10",
+  "updated_at": "2026-03-09T07:26:41.205194",
+  "updated_at_display": "09.03.2026 в 07:26",
   "key_rate": {
     "rate": 21.0,
     "date": "2024-10-28",
@@ -30,32 +30,32 @@
     {
       "bank": "Альфа-Банк",
       "product": "Альфа-Вклад",
-      "rate": 21.0,
+      "rate": 21.5,
       "term": "3 мес.",
       "min_amount": 10000,
       "type": "deposit",
       "is_promo": false,
-      "changed": 0
+      "changed": 0.5
     },
     {
       "bank": "ВТБ",
       "product": "Надёжный",
+      "rate": 21.0,
+      "term": "3 мес.",
+      "min_amount": 100000,
+      "type": "deposit",
+      "is_promo": false,
+      "changed": 0.5
+    },
+    {
+      "bank": "Сбербанк",
+      "product": "СберВклад+",
       "rate": 20.5,
       "term": "3 мес.",
       "min_amount": 100000,
       "type": "deposit",
       "is_promo": false,
-      "changed": 0
-    },
-    {
-      "bank": "Сбербанк",
-      "product": "СберВклад+",
-      "rate": 20.0,
-      "term": "3 мес.",
-      "min_amount": 100000,
-      "type": "deposit",
-      "is_promo": false,
-      "changed": 0
+      "changed": 0.5
     }
   ],
   "savings": [
@@ -70,34 +70,44 @@
       "changed": 0
     },
     {
-      "bank": "Альфа-Банк",
-      "product": "Альфа-Счёт",
-      "rate": 20.0,
+      "bank": "МКБ",
+      "product": "МКБ Онлайн",
+      "rate": 21.0,
       "term": "без срока",
       "min_amount": 0,
       "type": "savings",
       "is_promo": false,
       "changed": 0
+    },
+    {
+      "bank": "Альфа-Банк",
+      "product": "Альфа-Счёт",
+      "rate": 20.5,
+      "term": "без срока",
+      "min_amount": 0,
+      "type": "savings",
+      "is_promo": false,
+      "changed": 0.5
     },
     {
       "bank": "ВТБ",
       "product": "Накопительный ВТБ",
-      "rate": 19.0,
+      "rate": 19.5,
       "term": "без срока",
       "min_amount": 0,
       "type": "savings",
       "is_promo": false,
-      "changed": 0
+      "changed": 0.5
     },
     {
       "bank": "Сбербанк",
       "product": "СберСчёт",
-      "rate": 18.0,
+      "rate": 18.5,
       "term": "без срока",
       "min_amount": 0,
       "type": "savings",
       "is_promo": false,
-      "changed": 0
+      "changed": 0.5
     }
   ],
   "mortgage": [
@@ -130,6 +140,15 @@
     },
     {
       "bank": "ВТБ",
+      "product": "Семейная ипотека",
+      "rate": 6.0,
+      "type": "mortgage",
+      "mortgage_type": "Семейная",
+      "min_down_pct": 20,
+      "changed": 0
+    },
+    {
+      "bank": "Т-Банк",
       "product": "IT-ипотека",
       "rate": 6.0,
       "type": "mortgage",
@@ -148,12 +167,73 @@
     }
   ],
   "stats": {
-    "total_products": 14,
+    "total_products": 16,
     "banks_count": 5,
     "best_deposit": 23.0,
     "best_savings": 22.0,
-    "changes_count": 0,
+    "changes_count": 6,
     "promos_count": 1
   },
-  "changes": []
+  "changes": [
+    {
+      "bank": "Альфа-Банк",
+      "product": "Альфа-Вклад",
+      "rate": 21.5,
+      "term": "3 мес.",
+      "min_amount": 10000,
+      "type": "deposit",
+      "is_promo": false,
+      "changed": 0.5
+    },
+    {
+      "bank": "ВТБ",
+      "product": "Надёжный",
+      "rate": 21.0,
+      "term": "3 мес.",
+      "min_amount": 100000,
+      "type": "deposit",
+      "is_promo": false,
+      "changed": 0.5
+    },
+    {
+      "bank": "Сбербанк",
+      "product": "СберВклад+",
+      "rate": 20.5,
+      "term": "3 мес.",
+      "min_amount": 100000,
+      "type": "deposit",
+      "is_promo": false,
+      "changed": 0.5
+    },
+    {
+      "bank": "Альфа-Банк",
+      "product": "Альфа-Счёт",
+      "rate": 20.5,
+      "term": "без срока",
+      "min_amount": 0,
+      "type": "savings",
+      "is_promo": false,
+      "changed": 0.5
+    },
+    {
+      "bank": "ВТБ",
+      "product": "Накопительный ВТБ",
+      "rate": 19.5,
+      "term": "без срока",
+      "min_amount": 0,
+      "type": "savings",
+      "is_promo": false,
+      "changed": 0.5
+    },
+    {
+      "bank": "Сбербанк",
+      "product": "СберСчёт",
+      "rate": 18.5,
+      "term": "без срока",
+      "min_amount": 0,
+      "type": "savings",
+      "is_promo": false,
+      "changed": 0.5
+    }
+  ]
 }
